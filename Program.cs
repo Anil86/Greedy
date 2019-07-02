@@ -5,7 +5,8 @@
         static void Main(string[] args)
         {
             //ActivitySelection.Work();
-            CoinChange.Work();
+            //CoinChange.Work();
+            FractionalKnapsack.Work();
         }
     }
 }
