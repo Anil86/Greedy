@@ -1,12 +1,11 @@
-﻿using System;
-
-namespace Greedy
+﻿namespace Greedy
 {
     class Program
     {
         static void Main(string[] args)
         {
-            ActivitySelection.Work();
+            //ActivitySelection.Work();
+            CoinChange.Work();
         }
     }
 }
