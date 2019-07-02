@@ -6,7 +6,7 @@ namespace Greedy
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Greedy");
+            ActivitySelection.Work();
         }
     }
 }
