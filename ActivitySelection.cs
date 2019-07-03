@@ -5,64 +5,88 @@ namespace Greedy
 {
     public class ActivitySelection
     {
-        private void SelectMaxActivities()
+        private IEnumerable<Activity> SelectMaxActivities(List<Activity> activities)
         {
-            _activities.Sort((a1, a2) => a1.End.CompareTo(a2.End));
+            activities.Sort((a1, a2) => a1.End.CompareTo(a2.End));   // Sort
+            var selectedActivities = new List<Activity>(activities.Count);
 
-            MaxActivity(0);
+            SelectMaxActivitiesUsingList_(0);
+            return selectedActivities;
+
+
+            //Activity previousActivity = default;
+            //return SelectMaxActivitiesUsingYield_(0);
 
 
 
-            void MaxActivity(int i)
+            void SelectMaxActivitiesUsingList_(int i)
             {
-                if (i == 0)
-                {
-                    _selectedActivities.Add(_activities[i]);
+                if (i >= activities.Count) return;
 
-                    MaxActivity(i + 1);
-                }
+                if (i == 0) selectedActivities.Add(activities[i]);
                 else
-                {
-                    if (i == _activities.Count) return;
-
-
-                    while (_activities[i].Start < _selectedActivities[_selectedActivities.Count - 1].End)
+                    for (; i < activities.Count; i++)
                     {
-                        i++;
+                        if (activities[i].Start < selectedActivities[selectedActivities.Count - 1].End) continue;
 
-                        if (i == _activities.Count) return;
+                        selectedActivities.Add(activities[i]);
+                        break;
                     }
 
-                    _selectedActivities.Add(_activities[i]);
 
-                    MaxActivity(i + 1);
-                }
+                SelectMaxActivitiesUsingList_(i + 1);
             }
+
+
+
+            //IEnumerable<Activity> SelectMaxActivitiesUsingYield_(int i)
+            //{
+            //    if (i == activities.Count) yield break;
+
+            //    if (i == 0) yield return previousActivity = activities[i];
+
+            //    var j = i + 1;
+            //    for (; j < activities.Count; j++)
+            //    {
+            //        if (activities[j].Start < previousActivity.End) continue;
+
+            //        yield return previousActivity = activities[j];
+            //        break;
+            //    }
+
+            //    var y = SelectMaxActivitiesUsingYield_(j + 1);
+            //    foreach (var activity in y)
+            //        yield return activity;
+            //}
         }
 
 
 
         internal static void Work()
         {
-            var activitySelection = new ActivitySelection();
-            activitySelection.SelectMaxActivities();
+            var activities = new List<Activity>
+            {
+                new Activity("A1", 0, 6),
+                new Activity("A2", 3, 4),
+                new Activity("A3", 1, 2),
+                new Activity("A4", 5, 8),
+                new Activity("A5", 5, 7),
+                new Activity("A6", 8, 9)
+                
+                //new Activity("A1", 1, 2),
+                //new Activity("A2", 3, 4),
+                //new Activity("A3", 0, 6),
+                //new Activity("A4", 5, 7),
+                //new Activity("A5", 8, 9),
+                //new Activity("A6", 5, 9)
+            };
 
-            foreach (var selectedActivity in activitySelection._selectedActivities) Write(selectedActivity);
+            var selectedActivities = new ActivitySelection().SelectMaxActivities(activities);
+
+            foreach (var selectedActivity in selectedActivities) Write(selectedActivity);
         }
-
-
-
-        private readonly List<Activity> _activities = new List<Activity>(6)
-        {
-            new Activity("A1", 0, 6),
-            new Activity("A2", 3, 4),
-            new Activity("A3", 1, 2),
-            new Activity("A4", 5, 8),
-            new Activity("A5", 5, 7),
-            new Activity("A6", 8, 9)
-        };
-        private readonly List<Activity> _selectedActivities = new List<Activity>(6);
     }
+
 
 
     internal struct Activity
