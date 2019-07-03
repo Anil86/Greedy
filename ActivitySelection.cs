@@ -8,56 +8,58 @@ namespace Greedy
         private IEnumerable<Activity> SelectMaxActivities(List<Activity> activities)
         {
             activities.Sort((a1, a2) => a1.End.CompareTo(a2.End));   // Sort
-            var selectedActivities = new List<Activity>(activities.Count);
+            
 
-            SelectMaxActivitiesUsingList_(0);
-            return selectedActivities;
-
-
-            //Activity previousActivity = default;
-            //return SelectMaxActivitiesUsingYield_(0);
+            //var selectedActivities = new List<Activity>(activities.Count);
+            //SelectMaxActivitiesUsingList_(0);
+            //return selectedActivities;
 
 
+            Activity previousActivity = default;
+            return SelectMaxActivitiesUsingYield_(0);
 
-            void SelectMaxActivitiesUsingList_(int i)
+
+
+            //void SelectMaxActivitiesUsingList_(int i)
+            //{
+            //    if (i >= activities.Count) return;
+
+            //    if (i == 0) selectedActivities.Add(activities[i]);
+            //    else
+            //        for (; i < activities.Count; i++)
+            //        {
+            //            if (activities[i].Start < selectedActivities[selectedActivities.Count - 1].End) continue;
+
+            //            selectedActivities.Add(activities[i]);
+            //            break;
+            //        }
+
+
+            //    SelectMaxActivitiesUsingList_(i + 1);
+            //}
+
+
+
+            IEnumerable<Activity> SelectMaxActivitiesUsingYield_(int i)
             {
-                if (i >= activities.Count) return;
+                if (i >= activities.Count) yield break;
 
-                if (i == 0) selectedActivities.Add(activities[i]);
+                if (i == 0) yield return previousActivity = activities[i];
                 else
                     for (; i < activities.Count; i++)
                     {
-                        if (activities[i].Start < selectedActivities[selectedActivities.Count - 1].End) continue;
+                        if (activities[i].Start < previousActivity.End) continue;
 
-                        selectedActivities.Add(activities[i]);
+                        yield return previousActivity = activities[i];
                         break;
                     }
 
 
-                SelectMaxActivitiesUsingList_(i + 1);
+                // Iterate to get result of recursive call
+                var activitiesUsingRecursion = SelectMaxActivitiesUsingYield_(i + 1);
+                foreach (var activity in activitiesUsingRecursion)
+                    yield return activity;
             }
-
-
-
-            //IEnumerable<Activity> SelectMaxActivitiesUsingYield_(int i)
-            //{
-            //    if (i == activities.Count) yield break;
-
-            //    if (i == 0) yield return previousActivity = activities[i];
-
-            //    var j = i + 1;
-            //    for (; j < activities.Count; j++)
-            //    {
-            //        if (activities[j].Start < previousActivity.End) continue;
-
-            //        yield return previousActivity = activities[j];
-            //        break;
-            //    }
-
-            //    var y = SelectMaxActivitiesUsingYield_(j + 1);
-            //    foreach (var activity in y)
-            //        yield return activity;
-            //}
         }
 
 
@@ -66,19 +68,20 @@ namespace Greedy
         {
             var activities = new List<Activity>
             {
-                new Activity("A1", 0, 6),
+                new Activity("A1", 1, 2),
                 new Activity("A2", 3, 4),
-                new Activity("A3", 1, 2),
-                new Activity("A4", 5, 8),
-                new Activity("A5", 5, 7),
-                new Activity("A6", 8, 9)
+                new Activity("A3", 0, 6),
+                new Activity("A4", 5, 7),
+                new Activity("A5", 8, 9),
+                new Activity("A6", 5, 9)
                 
-                //new Activity("A1", 1, 2),
+                
+                //new Activity("A1", 0, 6),
                 //new Activity("A2", 3, 4),
-                //new Activity("A3", 0, 6),
-                //new Activity("A4", 5, 7),
-                //new Activity("A5", 8, 9),
-                //new Activity("A6", 5, 9)
+                //new Activity("A3", 1, 2),
+                //new Activity("A4", 5, 8),
+                //new Activity("A5", 5, 7),
+                //new Activity("A6", 8, 9)
             };
 
             var selectedActivities = new ActivitySelection().SelectMaxActivities(activities);
