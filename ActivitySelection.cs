@@ -8,35 +8,15 @@ namespace Greedy
         private IEnumerable<Activity> SelectMaxActivities(List<Activity> activities)
         {
             activities.Sort((a1, a2) => a1.End.CompareTo(a2.End));   // Sort
-            
-
-            //var selectedActivities = new List<Activity>(activities.Count);
-            //SelectMaxActivitiesUsingList_(0);
-            //return selectedActivities;
 
 
             Activity previousActivity = default;
             return SelectMaxActivitiesUsingYield_(0);
 
 
-
-            //void SelectMaxActivitiesUsingList_(int i)
-            //{
-            //    if (i >= activities.Count) return;
-
-            //    if (i == 0) selectedActivities.Add(activities[i]);
-            //    else
-            //        for (; i < activities.Count; i++)
-            //        {
-            //            if (activities[i].Start < selectedActivities[selectedActivities.Count - 1].End) continue;
-
-            //            selectedActivities.Add(activities[i]);
-            //            break;
-            //        }
-
-
-            //    SelectMaxActivitiesUsingList_(i + 1);
-            //}
+            //var selectedActivities = new List<Activity>(activities.Count);
+            //SelectMaxActivitiesUsingList_(0);
+            //return selectedActivities;
 
 
 
@@ -60,6 +40,26 @@ namespace Greedy
                 foreach (var activity in activitiesUsingRecursion)
                     yield return activity;
             }
+
+
+
+            //void SelectMaxActivitiesUsingList_(int i)
+            //{
+            //    if (i >= activities.Count) return;
+
+            //    if (i == 0) selectedActivities.Add(activities[i]);
+            //    else
+            //        for (; i < activities.Count; i++)
+            //        {
+            //            if (activities[i].Start < selectedActivities[selectedActivities.Count - 1].End) continue;
+
+            //            selectedActivities.Add(activities[i]);
+            //            break;
+            //        }
+
+
+            //    SelectMaxActivitiesUsingList_(i + 1);
+            //}
         }
 
 
