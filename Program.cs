@@ -7,8 +7,7 @@
             //ActivitySelection.Work();
             //CoinChange.Work();
             //FractionalKnapsack.Work();
-            //TheGift.Work();
-            DistributeCandy.Work();
+            TheGift.Work();
         }
     }
 }
