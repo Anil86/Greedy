@@ -11,15 +11,15 @@ namespace Greedy
         {
             int previousCandyCount = 0;
 
-            return CalculateCandiesL_R(ranks, 0, 0)   // L → R
-            .Zip(CalculateCandiesL_R(ranks.Reverse().ToArray(), 0, 0)   // R → L
+            return CalculateCandies(ranks, 0, 0)   // L → R
+            .Zip(CalculateCandies(ranks.Reverse().ToArray(), 0, 0)   // R → L
                 .Reverse(), (c1, c2) => (c1, c2))   // Reverse to sync candies index
             .Select(t => Math.Max(t.c1, t.c2))
             .Sum();
 
 
 
-            IEnumerable<int> CalculateCandiesL_R(int[] ranks_, int previous, int current)
+            IEnumerable<int> CalculateCandies(int[] ranks_, int previous, int current)
             {
                 if (current == ranks_.Length) yield break;
 
@@ -29,7 +29,7 @@ namespace Greedy
                     yield return currentCandyCount = ranks_[current] > ranks_[previous] ? previousCandyCount + 1 : 1;
 
                 previousCandyCount = currentCandyCount;
-                foreach (var nextCandy in CalculateCandiesL_R(ranks_, current, current + 1))
+                foreach (var nextCandy in CalculateCandies(ranks_, current, current + 1))
                     yield return nextCandy;
             }
         }
@@ -38,6 +38,7 @@ namespace Greedy
 
         internal static void Work()
         {
+            int[] ranks = { -255, 369, 319, 77, 128 };
             //int[] ranks =
             //{
             //    -255, 369, 319, 77, 128, -202, -147, 282, -26, -489, -443, -401, 385, 465, -134, 126, 304, 179, 16, 112,
@@ -65,7 +66,6 @@ namespace Greedy
             //    286, 312, 100, -24, 409, -392, 183, -69, -352, -56, -304, -261, -296, -140, 453, 253, -215, 195, 288,
             //    -300, 10, -104, -491, 275, -275, 175, 24, 387, 408
             //};
-            int[] ranks = { -255, 369, 319, 77, 128 };
 
             int totalCandies = new DistributeCandy().CalculateTotalCandies(ranks);
             WriteLine($"Total Candies = {totalCandies}");
