@@ -11,15 +11,16 @@ namespace Greedy
         {
             int previousCandyCount = 0;
 
-            return CalculateCandies(ranks, 0, 0)   // L → R
-            .Zip(CalculateCandies(ranks.Reverse().ToArray(), 0, 0)   // R → L
-                .Reverse(), (c1, c2) => (c1, c2))   // Reverse to sync candies index
-            .Select(t => Math.Max(t.c1, t.c2))
-            .Sum();
+
+            return CalculateTotalCandies(ranks, 0, 0)   // L → R
+                .Zip(CalculateTotalCandies(ranks.Reverse().ToArray(), 0, 0)   // R → L
+                    .Reverse(), (cL, cR) => (cL, cR))   // Reverse to sync candies index
+                .Select(t => Math.Max(t.cL, t.cR))
+                .Sum();
 
 
 
-            IEnumerable<int> CalculateCandies(int[] ranks_, int previous, int current)
+            IEnumerable<int> CalculateTotalCandies(int[] ranks_, int previous, int current)
             {
                 if (current == ranks_.Length) yield break;
 
@@ -28,9 +29,10 @@ namespace Greedy
                 else
                     yield return currentCandyCount = ranks_[current] > ranks_[previous] ? previousCandyCount + 1 : 1;
 
+
                 previousCandyCount = currentCandyCount;
-                foreach (var nextCandy in CalculateCandies(ranks_, current, current + 1))
-                    yield return nextCandy;
+                foreach (var nextCandyCount in CalculateTotalCandies(ranks_, current, current + 1))
+                    yield return nextCandyCount;
             }
         }
 
@@ -68,7 +70,7 @@ namespace Greedy
             //};
 
             int totalCandies = new DistributeCandy().CalculateTotalCandies(ranks);
-            WriteLine($"Total Candies = {totalCandies}");
+            WriteLine($"Total candies: {totalCandies}");
         }
     }
 }
