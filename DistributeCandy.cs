@@ -25,8 +25,7 @@ namespace Greedy
                 if (current == ranks_.Length) yield break;
 
                 int currentCandyCount;
-                if (current == 0)
-                    yield return currentCandyCount = previousCandyCount = 1;
+                if (current == 0) yield return currentCandyCount = previousCandyCount = 1;
                 else
                     yield return currentCandyCount = ranks_[current] > ranks_[previous] ? previousCandyCount + 1 : 1;
 
