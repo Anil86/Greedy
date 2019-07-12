@@ -7,9 +7,13 @@ namespace Greedy
 {
     public class TheGift
     {
+        /// <summary>Calculates contributions of people.</summary>
+        /// <param name="persons">Persons.</param>
+        /// <param name="giftPrice">Gift price.</param>
+        /// <returns>Persons w/ their contributions.</returns>
         private IEnumerable<Person> CalculateContributions(Person[] persons, int giftPrice)
         {
-            Array.Sort(persons, (p1, p2) => p1.Budget.CompareTo(p2.Budget));   // Sort
+            Array.Sort(persons, (p1, p2) => p1.Budget.CompareTo(p2.Budget));   // Sort by budget
 
 
             return CalculateContributions(0, giftPrice)
@@ -17,21 +21,19 @@ namespace Greedy
 
 
 
-            IEnumerable<Person> CalculateContributions(int personIndex, int gPrice)
+            IEnumerable<Person> CalculateContributions(int i, int gPrice)
             {
-                if (gPrice == 0) yield break;
+                if (gPrice == 0) yield break;   // When all gift price collected, return
 
-                int average = (int) Math.Round((float) gPrice / (persons.Length - personIndex));
-                // Calculate contribution
-                persons[personIndex].Contribution =
-                    persons[personIndex].Budget < average ? persons[personIndex].Budget : average;
+                int average = (int) Math.Round((float) gPrice / (persons.Length - i));   // Find average contribution
+                persons[i].Contribution = persons[i].Budget < average ? persons[i].Budget : average;   // Calculate contribution
 
-                yield return persons[personIndex];
+                yield return persons[i];
 
 
 
-                gPrice -= persons[personIndex].Contribution;
-                foreach (var nextPerson in CalculateContributions(personIndex + 1, gPrice))
+                gPrice -= persons[i].Contribution;   // Balance gift price
+                foreach (var nextPerson in CalculateContributions(i + 1, gPrice))   // Find next person contribution
                     yield return nextPerson;
             }
         }
