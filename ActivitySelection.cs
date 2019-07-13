@@ -1,32 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using static System.Console;
 
 namespace Greedy
 {
     public class ActivitySelection
     {
-        private IEnumerable<Activity> SelectMaxActivities(List<Activity> activities)
+        /// <summary>Selects maximum no.of activities.</summary>
+        /// <param name="activities">Activities array.</param>
+        /// <returns>Selected activities.</returns>
+        private IEnumerable<Activity> SelectMaxActivities(Activity[] activities)
         {
-            activities.Sort((a1, a2) => a1.End.CompareTo(a2.End));   // Sort
+            Array.Sort(activities, (a1, a2) => a1.End.CompareTo(a2.End));   // Sort based on end time
 
 
-            Activity previousActivity = default;
-            return SelectMaxActivitiesUsingYield_(0);
-
-
-            //var selectedActivities = new List<Activity>(activities.Count);
-            //SelectMaxActivitiesUsingList_(0);
-            //return selectedActivities;
+            Activity previousActivity = default;   // Store previous activity for comparison
+            return SelectMaxActivities(0);
 
 
 
-            IEnumerable<Activity> SelectMaxActivitiesUsingYield_(int i)
+            IEnumerable<Activity> SelectMaxActivities(int i)
             {
-                if (i >= activities.Count) yield break;
+                if (i >= activities.Length) yield break;   // Stop when checked all activities
 
-                if (i == 0) yield return previousActivity = activities[i];
+                if (i == 0) yield return previousActivity = activities[i];   // Select 1st activity
                 else
-                    for (; i < activities.Count; i++)
+                    for (; i < activities.Length; i++)   // Find next activity w/ start time ≥ previous activity's end time
                     {
                         if (activities[i].Start < previousActivity.End) continue;
 
@@ -35,38 +34,16 @@ namespace Greedy
                     }
 
 
-                // Iterate to get result of recursive call
-                var activitiesUsingRecursion = SelectMaxActivitiesUsingYield_(i + 1);
-                foreach (var activity in activitiesUsingRecursion)
+                foreach (var activity in SelectMaxActivities(i + 1))   // Find next activity
                     yield return activity;
             }
-
-
-
-            //void SelectMaxActivitiesUsingList_(int i)
-            //{
-            //    if (i >= activities.Count) return;
-
-            //    if (i == 0) selectedActivities.Add(activities[i]);
-            //    else
-            //        for (; i < activities.Count; i++)
-            //        {
-            //            if (activities[i].Start < selectedActivities[selectedActivities.Count - 1].End) continue;
-
-            //            selectedActivities.Add(activities[i]);
-            //            break;
-            //        }
-
-
-            //    SelectMaxActivitiesUsingList_(i + 1);
-            //}
         }
 
 
 
         internal static void Work()
         {
-            var activities = new List<Activity>
+            Activity[] activities =
             {
                 new Activity("A1", 1, 2),
                 new Activity("A2", 3, 4),

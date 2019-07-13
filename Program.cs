@@ -4,10 +4,10 @@
     {
         static void Main(string[] args)
         {
-            //ActivitySelection.Work();
+            ActivitySelection.Work();
             //CoinChange.Work();
             //FractionalKnapsack.Work();
-            TheGift.Work();
+            //TheGift.Work();
             //DistributeCandy.Work();
         }
     }
