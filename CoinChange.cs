@@ -1,14 +1,18 @@
-﻿using static System.Console;
-using System.Collections.Generic;
+﻿using System;
+using static System.Console;
 using System.Linq;
 
 namespace Greedy
 {
     public class CoinChange
     {
-        private void CalculateMinCoins(int change, List<Denomination> denominations)
+        /// <summary>Calculates the minimum coins.</summary>
+        /// <param name="change">The change.</param>
+        /// <param name="denominations">The denominations.</param>
+        private void CalculateMinCoins(int change, Denomination[] denominations)
         {
-            denominations.Sort((d1, d2) => -1 * d1.Money.CompareTo(d2.Money));   // Sort
+            // Sort denominations in descending order
+            Array.Sort(denominations, (d1, d2) => -1 * d1.Money.CompareTo(d2.Money));
 
 
             CalculateChange(change);
@@ -19,19 +23,20 @@ namespace Greedy
             {
                 if (change_ == 0)   // Stop condition
                 {
+                    // When full change is given, print coins
                     var selectedDenominations = denominations
                         .Where(d => d.Count > 0);
 
                     foreach (var selectedDenomination in selectedDenominations) WriteLine(selectedDenomination);
 
 
-                    return;
+                    return;   // When full change is given, return
                 }
 
 
-                foreach (var denomination in denominations)
+                foreach (var denomination in denominations)   // Find proper denomination
                 {
-                    if (denomination.Money > change_) continue;   // Find proper denomination
+                    if (denomination.Money > change_) continue;
 
                     change_ -= denomination.Money;   // Balance change
                     denomination.Count++;   // Increase denomination count
@@ -39,14 +44,14 @@ namespace Greedy
                 }
 
 
-                CalculateChange(change_);
+                CalculateChange(change_);   // Find next denomination to give
             }
         }
 
 
         internal static void Work()
         {
-            var denominations = new List<Denomination>(11)
+            Denomination[] denominations =
             {
                 new Denomination(1),
                 new Denomination(2),
@@ -67,6 +72,7 @@ namespace Greedy
 
 
 
+    /// <summary>Class Denomination.</summary>
     internal class Denomination
     {
         public Denomination(int money) => Money = money;

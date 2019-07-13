@@ -4,8 +4,8 @@
     {
         static void Main(string[] args)
         {
-            ActivitySelection.Work();
-            //CoinChange.Work();
+            //ActivitySelection.Work();
+            CoinChange.Work();
             //FractionalKnapsack.Work();
             //TheGift.Work();
             //DistributeCandy.Work();
