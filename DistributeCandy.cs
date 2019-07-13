@@ -7,6 +7,9 @@ namespace Greedy
 {
     public class DistributeCandy
     {
+        /// <summary>Calculates the total candies.</summary>
+        /// <param name="ranks">Child ranks.</param>
+        /// <returns>Total candies.</returns>
         private int CalculateTotalCandies(int[] ranks)
         {
             int previousCandyCount = 0;
@@ -22,14 +25,16 @@ namespace Greedy
 
             IEnumerable<int> CalculateTotalCandies(int[] ranks_, int previous, int current)
             {
-                if (current == ranks_.Length) yield break;
+                if (current == ranks_.Length) yield break;   // Return when all ranks finished
 
                 int currentCandyCount = 1;
-                if (current == 0) yield return previousCandyCount = 1;
+                if (current == 0) yield return previousCandyCount = 1;   // 1st child gets 1 candy 
                 else
+                    // If child's rank ↑, give 1 extra candy, else only 1 candy
                     yield return currentCandyCount = ranks_[current] > ranks_[previous] ? previousCandyCount + 1 : 1;
 
 
+                // Find next rank's candy by comparing current & next rank
                 previousCandyCount = currentCandyCount;
                 foreach (var nextCandyCount in CalculateTotalCandies(ranks_, current, current + 1))
                     yield return nextCandyCount;
