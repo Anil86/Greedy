@@ -6,9 +6,10 @@
         {
             //ActivitySelection.Work();
             //CoinChange.Work();
-            FractionalKnapsack.Work();
+            //FractionalKnapsack.Work();
             //TheGift.Work();
             //DistributeCandy.Work();
+            AddemUp.Work();
         }
     }
 }
