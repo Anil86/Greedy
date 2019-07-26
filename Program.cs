@@ -9,7 +9,8 @@
             //FractionalKnapsack.Work();
             //TheGift.Work();
             //DistributeCandy.Work();
-            HouseThief.Work();
+            //HouseThief.Work();
+            BrickInWall.Work();
         }
     }
 }
