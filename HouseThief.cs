@@ -1,7 +1,6 @@
 ﻿using static System.Console;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Greedy
 {
@@ -9,11 +8,14 @@ namespace Greedy
     {
         private (Dictionary<int, int> values, int total) MaximizeValue(int[] houses)
         {
+            // ToDo: Store adjacency data using 2-D array
+            // Store original index prior to sorting
             int index = 0;
-            Dictionary<int, int> stolenValues = new Dictionary<int, int>(houses.Length / 2 + 1);
-            (int value, int i) previousHouse = default;
             (int value, int i)[] housesIndexes = Array.ConvertAll(houses, v => (v, index++));
+            // Dictionary<original index, value> of stolen houses
+            Dictionary<int, int> stolenValues = new Dictionary<int, int>(houses.Length / 2 + 1);
 
+            // Sort by descending
             Array.Sort(housesIndexes, (h1, h2) => -1 * h1.value.CompareTo(h2.value));
 
             int stolenValue = MaximizeValue(0);
@@ -25,29 +27,16 @@ namespace Greedy
                 if (current == housesIndexes.Length) return 0;
 
 
-                int currentHouseValue = 0;
-                if (current == 0)
-                {
-                    stolenValues[housesIndexes[0].i] = housesIndexes[0].value;
-                    //stolenValues.Add(housesIndexes[0]);
-                    previousHouse = housesIndexes[0];
-                    currentHouseValue = housesIndexes[0].value;
-                    current++;
-                }
-
-                bool isAdjacent = Math.Abs(previousHouse.i - housesIndexes[current].i) == 1 ||
-                                  stolenValues.ContainsKey(housesIndexes[current].i + 1) ||
-                                  stolenValues.ContainsKey(housesIndexes[current].i - 1);
-                //stolenValues.Any(h => Math.Abs(h.i - housesIndexes[current].i) == 1);
-                if (!isAdjacent)
+                if (current == 0 ||   // 1st house
+                    !stolenValues.ContainsKey(housesIndexes[current].i - 1) &&   // Check previous index is neighbor
+                    !stolenValues.ContainsKey(housesIndexes[current].i + 1))   // Check next index is neighbor
                 {
                     stolenValues[housesIndexes[current].i] = housesIndexes[current].value;
-                    //stolenValues.Add(housesIndexes[current]);
-                    previousHouse = housesIndexes[current];
-                    currentHouseValue += housesIndexes[current].value;
+                    // Take current house value
+                    return housesIndexes[current].value + MaximizeValue(current + 1);
                 }
 
-                return currentHouseValue + MaximizeValue(current + 1);
+                return MaximizeValue(current + 1);   // Neighbor: Ignore value
             }
         }
 
