@@ -28,6 +28,7 @@ namespace Greedy
 
 
                 if (current == 0 ||   // 1st house
+                    // Check for neighbors
                     !stolenValues.ContainsKey(housesIndexes[current].i - 1) &&   // Check previous index is neighbor
                     !stolenValues.ContainsKey(housesIndexes[current].i + 1))   // Check next index is neighbor
                 {
