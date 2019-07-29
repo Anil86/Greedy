@@ -10,7 +10,8 @@
             //TheGift.Work();
             //DistributeCandy.Work();
             //HouseThief.Work();
-            BrickInWall.Work();
+            //BrickInWall.Work();
+            RearrangeStringTo2Nums.Work();
         }
     }
 }
