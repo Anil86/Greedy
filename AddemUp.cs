@@ -1,37 +1,38 @@
-﻿using static System.Console;
-using System;
+﻿using System;
+using static System.Console;
 
 namespace Greedy
 {
-    // Problem: https://www.codingame.com/ide/puzzle/addem-up 
-
     public class AddemUp
     {
-        private (int CardValue, int Charge) CalculateCharge(int[] cards)
+        private (int value, int cost) RecycleEfficiently(int[] cards)
         {
-            Array.Sort(cards);   // Initial sort
+            Array.Sort(cards);
+
+            int cost = 0;
+            RecycleEfficiently(0, 1);
+            int value = cards[cards.Length - 1];   // Last card's value
+
+            return (value, cost);
 
 
-            int cardValue = 0, charge = 0;
-            CalculateCharge(0, ref cardValue, ref charge);
 
-
-            return (cardValue, charge);
-
-
-
-            void CalculateCharge(int i, ref int card, ref int chrg)
+            void RecycleEfficiently(int previous, int current)
             {
-                if (i == cards.Length - 1) return;   // Return the last card
+                if (current == cards.Length) return;
 
 
-                card = cards[i + 1] = cards[i] + cards[i + 1];   // Add 2 minimum cards
-                chrg += card;   // Update charge
-                Array.Sort(cards, i + 1, cards.Length - (i + 1));   // Sort after new (high) card created
+                // Replace previous 2 cards w/ new recycled card
+                cards[current] = cards[previous] + cards[current];
+                cost += cards[current];   // Add new cost to previous cost
+
+                // Sort to place new higher value card in proper position
+                Array.Sort(cards, current, cards.Length - current);
 
 
-                CalculateCharge(i + 1, ref card, ref chrg);
+                RecycleEfficiently(current, current + 1);   // Recycle remaining cards
             }
+
         }
 
 
@@ -40,10 +41,14 @@ namespace Greedy
         {
             int[] cards = { 1, 4, 3, 4 };
             //int[] cards = { 9, 9, 9, 9, 9, 9, 9, 9, 9 };
-            //int[] cards = { 15282, 6674, 93033, 48628, 75335, 61596, 66495, 33570, 15004, 60598, 91072, 79972, 78971, 72325, 15986, 95574, 41770, 39882, 96387, 9413 };
+            //int[] cards =
+            //{
+            //    15282, 6674, 93033, 48628, 75335, 61596, 66495, 33570, 15004, 60598, 91072, 79972, 78971, 72325, 15986,
+            //    95574, 41770, 39882, 96387, 9413
+            //};
 
-            var (cardValue, charge) = new AddemUp().CalculateCharge(cards);
-            WriteLine($"Card: {cardValue}\t\tCharge: {charge:C0}");
+            (int value, int cost) = new AddemUp().RecycleEfficiently(cards);
+            WriteLine($"Card: {value}\tCost: {cost:C0}");
         }
     }
 }
