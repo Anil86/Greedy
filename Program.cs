@@ -8,9 +8,10 @@
             //CoinChange.Work();
             //FractionalKnapsack.Work();
             //TheGift.Work();
+            //AddemUp.Work();
             //DistributeCandy.Work();
             //HouseThief.Work();
-            AddemUp.Work();
+            ForestFire.Work();
         }
     }
 }
