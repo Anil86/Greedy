@@ -1,6 +1,5 @@
 ﻿using static System.Console;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Greedy
@@ -10,34 +9,46 @@ namespace Greedy
         /// <summary>Calculates the total candies.</summary>
         /// <param name="ranks">Child ranks.</param>
         /// <returns>Total candies.</returns>
-        private int CalculateTotalCandies(int[] ranks)
+        private int MinimizeTotalCandies(int[] ranks)
         {
-            int previousCandyCount = 0;
+            // Create children from ranks
+            Child[] children = Array.ConvertAll(ranks, r => new Child { Rank = r });
+
+            GiveCandy(0, StartingPoint.Left);   // L → R
+
+            Array.Reverse(children);
+            GiveCandy(0, StartingPoint.Right);   // R → L
 
 
-            return CalculateTotalCandies(ranks, 0, 0)   // L → R
-                .Zip(CalculateTotalCandies(ranks.Reverse().ToArray(), 0, 0)   // R → L
-                    .Reverse(), (cL, cR) => (cL, cR))   // Reverse to sync candies index
-                .Select(t => Math.Max(t.cL, t.cR))
-                .Sum();
+            return children.Sum(c => c.ActualCandy);   // Total candies
 
 
 
-            IEnumerable<int> CalculateTotalCandies(int[] ranks_, int previous, int current)
+            void GiveCandy(int current, StartingPoint startingPoint)
             {
-                if (current == ranks_.Length) yield break;   // Return when all ranks finished
+                // When all children finish, return
+                if (current == children.Length) return;   // Stop condition
 
-                int currentCandyCount = 1;
-                if (current == 0) yield return previousCandyCount = 1;   // 1st child gets 1 candy 
+
+                if (current == 0) // Give 1 candy to 1st child
+                    if (startingPoint == StartingPoint.Left) children[0].LrCandy = 1;
+                    else children[0].RlCandy = 1;
                 else
-                    // If child's rank ↑, give 1 extra candy, else only 1 candy
-                    yield return currentCandyCount = ranks_[current] > ranks_[previous] ? previousCandyCount + 1 : 1;
+                {
+                    // If child's rank ↑, give 1 extra candy than previous child
+                    if (children[current].Rank > children[current - 1].Rank)
+                        if (startingPoint == StartingPoint.Left)
+                            children[current].LrCandy = children[current - 1].LrCandy + 1;
+                        else children[current].RlCandy = children[current - 1].RlCandy + 1;
+                    else   // If child's rank less or equal, give 1 candy
+                    {
+                        if (startingPoint == StartingPoint.Left) children[current].LrCandy = 1;
+                        else children[current].RlCandy = 1;
+                    }
+                }
 
 
-                // Find next rank's candy by comparing current & next rank
-                previousCandyCount = currentCandyCount;
-                foreach (var nextCandyCount in CalculateTotalCandies(ranks_, current, current + 1))
-                    yield return nextCandyCount;
+                GiveCandy(current + 1, startingPoint);   // Give candy to next child
             }
         }
 
@@ -45,8 +56,8 @@ namespace Greedy
 
         internal static void Work()
         {
-            int[] ranks = { -255, 369, 319, 77, 128 };
-            //int[] ranks =
+            int[] ranks = { -255, 369, 319, 77, 128 };   // Ans: 9
+            //int[] ranks =   // Ans: 930
             //{
             //    -255, 369, 319, 77, 128, -202, -147, 282, -26, -489, -443, -401, 385, 465, -134, 126, 304, 179, 16, 112,
             //    473, -467, 279, -233, 66, 76, 408, 148, -369, 328, 138, -164, 492, -276, -326, 170, 168, 189, 13, 383,
@@ -74,8 +85,26 @@ namespace Greedy
             //    -300, 10, -104, -491, 275, -275, 175, 24, 387, 408
             //};
 
-            int totalCandies = new DistributeCandy().CalculateTotalCandies(ranks);
+            int totalCandies = new DistributeCandy().MinimizeTotalCandies(ranks);
             WriteLine($"Total candies: {totalCandies}");
         }
+    }
+
+
+
+    internal class Child
+    {
+        public int Rank { get; set; }
+        public int LrCandy { get; set; }
+        public int RlCandy { get; set; }
+        public int ActualCandy => Math.Max(LrCandy, RlCandy);
+    }
+
+
+
+    internal enum StartingPoint
+    {
+        Left,
+        Right
     }
 }
