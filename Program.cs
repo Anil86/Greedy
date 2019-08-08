@@ -12,7 +12,8 @@
             //DistributeCandy.Work();
             //HouseThief.Work();
             //ForestFire.Work();
-            BrickInWall.Work();
+            //BrickInWall.Work();
+            KthElement2SortedArrays.Work();
         }
     }
 }
