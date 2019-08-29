@@ -11,8 +11,22 @@ namespace Greedy
         /// <returns>Item at index k in the combined array.</returns>
         private int Get(int[] array1, int[] array2, int k)
         {
-            int current = -1;   // Current picked item's index
             k--;   // Convert item's index to 0-based
+
+
+            // Optimization: If arrays are in order
+            if (array2[0] >= array1[array1.Length - 1])   // If array1 before array2
+                return k <= array1.Length - 1
+                    ? array1[k]   // If k in array1
+                    : array2[k - array1.Length];   // If k in array2
+
+            if (array1[0] >= array2[array2.Length - 1])   // If array1 after array2
+                return k <= array2.Length - 1
+                    ? array2[k]   // If k in array2
+                    : array1[k - array2.Length];   // If k in array1
+
+
+            int current = -1;   // Current picked item's index
             int last = array1.Length + array2.Length - 1;   // Last item's index in combined array
             int mid = last / 2;
 
@@ -35,14 +49,14 @@ namespace Greedy
                 // Greedy choices
                 if (array1[i] < array2[j]) // array1 < array2
                 {
-                    if (current == k - 1) return array1[i]; // If k reached, return
+                    if (current == k - 1) return array1[i]; // If k will be reached, return
 
                     i++;   // array1 item picked, so increase index
                     current++;   // Increase current picked counter
                 }
                 else if (array1[i] > array2[j]) // array1 > array2
                 {
-                    if (current == k - 1) return array2[j]; // If k reached, return
+                    if (current == k - 1) return array2[j]; // If k will be reached, return
 
                     j++;   // array2 item picked, so increase index
                     current++;   // Increase current picked counter
@@ -50,7 +64,7 @@ namespace Greedy
                 else   // if (array1[i] == array2[j])             array1 = array2
                 {
                     // As 2 items will be picked, check if current is last or 2nd-last item w.r.t k
-                    if (current == k - 1 || current == k - 2) return array1[i]; // If k reached, return
+                    if (current == k - 1 || current == k - 2) return array1[i]; // If k will be reached, return
 
                     // array1 & array2 items picked, so decrease both
                     i++;
@@ -66,21 +80,21 @@ namespace Greedy
             int GetRight(int i, int j)
             {
                 // Stop conditions
-                if (i == -1) return array2[last - k];   // If array1 finish, get kth item from array2
-                if (j == -1) return array1[last - k];   // If array2 finish, get kth item from array1
+                if (i == -1) return array2[last - k];   // If array1 below start, get kth item from array2
+                if (j == -1) return array1[last - k];   // If array2 below start, get kth item from array1
 
 
                 // Greedy choices
                 if (array1[i] > array2[j])   // array1 > array2   
                 {
-                    if (current == k - 1) return array1[i];   // If k reached, return
+                    if (current == k - 1) return array1[i];   // If k will be reached, return
 
                     i--;   // array1 item picked, so decrease index
                     current++;   // Increase current picked counter
                 }
                 else if (array1[i] < array2[j])   // array1 < array2
                 {
-                    if (current == k - 1) return array2[j];   // If k reached, return
+                    if (current == k - 1) return array2[j];   // If k will be reached, return
 
                     j--;   // array2 item picked, so decrease index
                     current++;   // Increase current picked counter
@@ -88,7 +102,7 @@ namespace Greedy
                 else   // if (array1[i] == array2[j])              array1 = array2
                 {
                     // As 2 items will be picked, check if current is last or 2nd-last item w.r.t k                    
-                    if (current == k - 1 || current == k - 2) return array1[i];   // If k reached, return
+                    if (current == k - 1 || current == k - 2) return array1[i];   // If k will be reached, return
 
                     // array1 & array2 items picked, so decrease both
                     i--;
@@ -105,21 +119,32 @@ namespace Greedy
 
         internal static void Work()
         {
-            //int[] array1 = { 2, 3, 6, 7, 9 },
-            //    array2 = { 1, 4, 8, 10 };
-            //int k = 5;
+            int[] array1 = { 2, 3, 6, 7, 9 },
+                array2 = { 1, 4, 8, 10 };
+            int k = 5;
             // Ans: 6
 
-            int[] array1 =
-                {
-                    3, 4, 11, 14, 15, 15, 16, 18, 22, 23, 24, 24, 26, 27, 28, 28, 35, 36, 39, 41, 41, 41, 42, 43, 43,
-                    44,
-                    45, 45, 47, 48, 48, 53, 54, 55, 55, 56, 56, 60, 61, 61, 61, 63, 65, 66, 68, 69, 70, 72, 72, 73, 73,
-                    74,
-                    74, 76, 76, 79, 81, 81, 81, 83, 86, 90, 91, 92, 92, 95, 99, 100
-                },
-                array2 = { 26 };
-            int k = 26;
+            // Arrays in order
+            //int[] array1 = { 1, 3, 4, 6, 7 },
+            //    array2 = { 8, 10, 11, 12 };
+            //int k = 9;
+            // Ans: 11
+
+            //int[] array1 = { 8, 10, 11, 12 },
+            //    array2 = { 1, 3, 4, 6, 7 };
+            //int k = 9;
+            // Ans: 11
+
+            //int[] array1 =
+            //    {
+            //        3, 4, 11, 14, 15, 15, 16, 18, 22, 23, 24, 24, 26, 27, 28, 28, 35, 36, 39, 41, 41, 41, 42, 43, 43,
+            //        44,
+            //        45, 45, 47, 48, 48, 53, 54, 55, 55, 56, 56, 60, 61, 61, 61, 63, 65, 66, 68, 69, 70, 72, 72, 73, 73,
+            //        74,
+            //        74, 76, 76, 79, 81, 81, 81, 83, 86, 90, 91, 92, 92, 95, 99, 100
+            //    },
+            //    array2 = { 26 };
+            //int k = 26;
             // Ans: 43
 
             //int[] array1 =
