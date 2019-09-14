@@ -14,7 +14,8 @@
             //ForestFire.Work();
             //BrickInWall.Work();
             //KthElement2SortedArrays.Work();
-            SumMiddleElements2SortedArrays.Work();
+            //SumMiddleElements2SortedArrays.Work();
+            PrateekAndTheories.Work();
         }
     }
 }
