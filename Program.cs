@@ -15,7 +15,8 @@
             //BrickInWall.Work();
             //KthElement2SortedArrays.Work();
             //SumMiddleElements2SortedArrays.Work();
-            PrateekAndTheories.Work();
+            //PrateekAndTheories.Work();
+            MIvsCSKandPearls.Work();
         }
     }
 }
