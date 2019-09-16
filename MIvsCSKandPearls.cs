@@ -9,10 +9,15 @@ namespace Greedy
         {
             if (noOfPearls == 0) return 0;
 
+            int[] dp = new int[prices.Length];
+
             int maxPriceDiff = int.MinValue;
             CalculateMaxPriceDiff(0);
 
-            return noOfPearls * maxPriceDiff;
+            long maxProfit = (long)noOfPearls * maxPriceDiff;
+            // If pearls price don't rise, -'ve profit.
+            // So return 0.
+            return maxProfit >= 0 ? maxProfit : 0;   
 
 
 
@@ -28,8 +33,10 @@ namespace Greedy
                     return;
                 }
 
-                int currentMaxProfit = FindMaxSalePrice(buyIndex + 1) - prices[buyIndex];
-                int nextCurrentMaxProfit = FindMaxSalePrice(buyIndex + 2) - prices[buyIndex + 1];
+                if (dp[buyIndex + 1] == 0) FindMaxSalePrice(buyIndex + 1);
+                int currentMaxProfit = dp[buyIndex + 1] - prices[buyIndex];
+                if (dp[buyIndex + 2] == 0) FindMaxSalePrice(buyIndex + 2);
+                int nextCurrentMaxProfit = dp[buyIndex + 2] - prices[buyIndex + 1];
 
                 consecutiveMaxPriceDiff = Math.Max(currentMaxProfit, nextCurrentMaxProfit);
                 if (consecutiveMaxPriceDiff > maxPriceDiff) maxPriceDiff = consecutiveMaxPriceDiff;
@@ -40,12 +47,14 @@ namespace Greedy
 
             int FindMaxSalePrice(int start)
             {
-                int maxSalePrice = prices[start];
-                for (var i = start + 1; i < prices.Length; i++)
-                    if (prices[i] > maxSalePrice)
-                        maxSalePrice = prices[i];
+                dp[prices.Length - 1] = prices[prices.Length - 1];
 
-                return maxSalePrice;
+                for (var i = prices.Length - 2; i >= start; i--)
+                    dp[i] = prices[i] > dp[i + 1]
+                        ? prices[i]
+                        : dp[i + 1];
+
+                return dp[start];
             }
         }
 
@@ -54,7 +63,7 @@ namespace Greedy
         internal static void Work()
         {
             int noOfPearls = 2;
-            int[] prices = { 8, 97, 7, 66 };
+            int[] prices = { 8, 97, 7, 66 };   // Ans: 178
 
             long maxProfit = new MIvsCSKandPearls().CalculateMaxProfit(prices, noOfPearls);
             WriteLine(maxProfit);
