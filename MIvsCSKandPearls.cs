@@ -14,11 +14,8 @@ namespace Greedy
             int maxPriceDiff = int.MinValue;
             CalculateMaxPriceDiff(0);
 
-            long maxProfit = (long)noOfPearls * maxPriceDiff;
-            // If pearls price don't rise, -'ve profit.
-            // So return 0.
-            return maxProfit >= 0 ? maxProfit : 0;   
-
+            return (long)noOfPearls * maxPriceDiff;
+            
 
 
             void CalculateMaxPriceDiff(int buyIndex)
@@ -66,6 +63,9 @@ namespace Greedy
             int[] prices = { 8, 97, 7, 66 };   // Ans: 178
 
             long maxProfit = new MIvsCSKandPearls().CalculateMaxProfit(prices, noOfPearls);
+            // If pearls price don't rise, -ve profit.
+            // So return 0.
+            if (maxProfit < 0) maxProfit = 0;
             WriteLine(maxProfit);
         }
     }
