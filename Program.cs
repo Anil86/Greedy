@@ -16,7 +16,8 @@
             //KthElement2SortedArrays.Work();
             //SumMiddleElements2SortedArrays.Work();
             //PrateekAndTheories.Work();
-            MIvsCSKandPearls.Work();
+            //MIvsCSKandPearls.Work();
+            XsquareAndChocolatesBars.Work();
         }
     }
 }
