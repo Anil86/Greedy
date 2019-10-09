@@ -1,9 +1,8 @@
 class Accommodation:
-    def __init__(self, count=0):
-        self.count = count
-
-    def CountAccommodationWays(self, floorCapacities, noOfPeople):
+    def CountAccommodationWaysMemo(self, floorCapacities, noOfPeople):
         floorCapacities.sort(reverse=True)
+
+        dp = [[-1 for _ in range(noOfPeople + 1)] for _ in range(len(floorCapacities))]
 
         def CountStartAccomodationFrom(floor, noOfPeopleLocal):
             Accommodation._count += 1
@@ -12,27 +11,34 @@ class Accommodation:
 
             # if remaining < 0: return
             if remaining == 0:
-                self.count += 1
-                return
+                dp[floor][noOfPeopleLocal] = 1
+                return 1
 
             # Divide & Combine
+            levelCount = 0
             for lev in range(floor, len(floorCapacities)):
                 if remaining < floorCapacities[lev]: continue
 
-                CountStartAccomodationFrom(lev, remaining)
+                if dp[lev][remaining] == -1:
+                    dp[lev][remaining] = CountStartAccomodationFrom(lev, remaining)
+                levelCount += dp[lev][remaining]
 
+            dp[floor][noOfPeopleLocal] = levelCount
+            return levelCount
+
+        finalCount = 0
         for level in range(len(floorCapacities)):
-            CountStartAccomodationFrom(level, noOfPeople)
+            finalCount += CountStartAccomodationFrom(level, noOfPeople)
 
-        return self.count
+        return finalCount
 
     _count = 0
 
     @staticmethod
     def Work():
         noOfPeople = 5
-        floorCapacities = [1, 2, 3]  # Ans: 5  15
+        floorCapacities = [1, 2, 3]  # Ans: 5  15   9
 
-        accommodationWays = Accommodation().CountAccommodationWays(floorCapacities, noOfPeople)
+        accommodationWays = Accommodation().CountAccommodationWaysMemo(floorCapacities, noOfPeople)
         print(accommodationWays)
         print(Accommodation._count)
