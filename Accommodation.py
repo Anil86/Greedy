@@ -5,7 +5,6 @@ class Accommodation:
         dp = [[-1 for _ in range(noOfPeople + 1)] for _ in range(len(floorCapacities))]
 
         def CountStartAccomodationFrom(floor, noOfPeopleLocal):
-            Accommodation._count += 1
             # Solve small sub-problems
             remaining = noOfPeopleLocal - floorCapacities[floor]
 
@@ -32,13 +31,48 @@ class Accommodation:
 
         return finalCount
 
-    _count = 0
+    def CountAccommodationWaysTab(self, floorCapacities, noOfPeople):
+        floorCapacities.sort(reverse=True)
+
+        dp = [[0 for _ in range(noOfPeople + 1)] for _ in range(len(floorCapacities))]
+
+        row = len(floorCapacities)
+
+        for currentNoOfPeople in range(floorCapacities[- 1], noOfPeople + 1):
+            row -= 1
+            if row < 0: row = 0
+            for floor in range(row, len(floorCapacities)):
+                remaining = currentNoOfPeople - floorCapacities[floor]
+
+                # Solve small sub-problems
+                if remaining == 0:
+                    dp[floor][currentNoOfPeople] = 1
+                    continue
+
+                # Divide & Combine
+                levelCount = 0
+                for level in range(floor, len(floorCapacities)):
+                    if remaining < floorCapacities[level]: continue
+                    levelCount += dp[level][remaining]
+
+                dp[floor][currentNoOfPeople] = levelCount
+
+        finalCount = 0
+        for floor in range(len(floorCapacities)):
+            finalCount += dp[floor][noOfPeople]
+
+        return finalCount
 
     @staticmethod
     def Work():
-        noOfPeople = 5
-        floorCapacities = [1, 2, 3]  # Ans: 5  15   9
+        # noOfPeople = 5
+        # floorCapacities = [1, 2, 3]  # Ans: 5
 
-        accommodationWays = Accommodation().CountAccommodationWaysMemo(floorCapacities, noOfPeople)
+        # noOfPeople = 6
+        # floorCapacities = [1, 3, 5]  # Ans: 4
+
+        noOfPeople = 10
+        floorCapacities = [2, 4, 5, 7, 8]  # Ans: 5
+
+        accommodationWays = Accommodation().CountAccommodationWaysTab(floorCapacities, noOfPeople)
         print(accommodationWays)
-        print(Accommodation._count)

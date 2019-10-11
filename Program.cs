@@ -17,7 +17,8 @@
             //SumMiddleElements2SortedArrays.Work();
             //PrateekAndTheories.Work();
             //MIvsCSKandPearls.Work();
-            XsquareAndChocolatesBars.Work();
+            //XsquareAndChocolatesBars.Work();
+            Accommodation.Work();
         }
     }
 }
