@@ -5,6 +5,33 @@ namespace Greedy
 {
     public class Accommodation
     {
+        private long CountAccommodationWaysMemo(int[] floorCapacities, int noOfPeople)
+        {
+            Array.Sort(floorCapacities);
+
+            return CountAccommodationWays(noOfPeople, 0);
+
+
+
+            long CountAccommodationWays(int noOfPeopleLocal, int floor)
+            {
+                _count++;
+                // Solve small sub-problems
+                if (noOfPeopleLocal == 0) return 1;
+                if (noOfPeopleLocal < 0) return 0;
+
+
+                // Divide & Combine
+                long noOfWays = 0;
+                for (var level = floor; level < floorCapacities.Length; level++)
+                    noOfWays += CountAccommodationWays(noOfPeopleLocal - floorCapacities[level], level);
+
+                return noOfWays;
+            }
+        }
+
+
+
         private long CountAccommodationWaysTab(int[] floorCapacities, int noOfPeople)
         {
             Array.Sort(floorCapacities, (n1, n2) => -1 * n1.CompareTo(n2));
@@ -50,20 +77,23 @@ namespace Greedy
         }
 
 
-
+        private static int _count;
         internal static void Work()
         {
-            int noOfPeople = 5;
-            int[] floorCapacities = { 1, 2, 3 };   // Ans: 5
+            //int noOfPeople = 4;
+            //int[] floorCapacities = { 1, 2 };   // Ans: 3   C: 11
+
+            //int noOfPeople = 5;
+            //int[] floorCapacities = { 1, 2, 3 };   // Ans: 5   C: 26
 
             //int noOfPeople = 6;
-            //int[] floorCapacities = { 1, 3, 5 };   // Ans: 4
+            //int[] floorCapacities = { 1, 3, 5 };   // Ans: 4   C: 26
 
-            //int noOfPeople = 10;
-            //int[] floorCapacities = { 2, 4, 5, 7, 8 };   // Ans: 5
+            int noOfPeople = 10;
+            int[] floorCapacities = { 2, 4, 5, 7, 8 };   // Ans: 5   C: 59
 
-            long accommodationWays = new Accommodation().CountAccommodationWaysTab(floorCapacities, noOfPeople);
-            WriteLine(accommodationWays);
+            long accommodationWays = new Accommodation().CountAccommodationWaysMemo(floorCapacities, noOfPeople);
+            WriteLine(accommodationWays); WriteLine($"C: {_count}");
         }
     }
 }
