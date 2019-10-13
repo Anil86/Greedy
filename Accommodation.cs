@@ -1,45 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using static System.Console;
 
 namespace Greedy
 {
     public class Accommodation
     {
-        private long CountAccommodationWaysMemo(int[] floorCapacities, int noOfPeople)
-        {
-            Dictionary<(int currentFloor, int noOfPeople), long> dp =
-                new Dictionary<(int currentFloor, int noOfPeople), long>();
-
-            Array.Sort(floorCapacities);
-
-            return CountAccommodationWays(0, noOfPeople);
-
-
-
-            long CountAccommodationWays(int currentFloor, int noOfPeopleLocal)
-            {
-                // Solve small sub-problems
-                if (noOfPeopleLocal == 0) return dp[(currentFloor, noOfPeople: 0)] = 1;
-                if (noOfPeopleLocal < 0) return dp[(currentFloor, noOfPeople: noOfPeopleLocal)] = 0;
-
-
-                // Divide & Combine
-                long noOfWays = 0;
-                for (var level = currentFloor; level < floorCapacities.Length; level++)
-                {
-                    int remaining = noOfPeopleLocal - floorCapacities[level];
-                    if (!dp.ContainsKey((currentFloor: level, noOfPeople: remaining)))
-                        dp[(currentFloor: level, noOfPeople: remaining)] = CountAccommodationWays(level, remaining);
-                    noOfWays += dp[(currentFloor: level, noOfPeople: remaining)];
-                }
-
-                return dp[(currentFloor, noOfPeople: noOfPeopleLocal)] = noOfWays;
-            }
-        }
-
-
-
         private long CountAccommodationWaysTab(int[] floorCapacities, int noOfPeople)
         {
             Array.Sort(floorCapacities, (n1, n2) => -1 * n1.CompareTo(n2));
@@ -99,7 +64,7 @@ namespace Greedy
             int noOfPeople = 10;
             int[] floorCapacities = { 2, 4, 5, 7, 8 };   // Ans: 5   C: 59  35
 
-            long accommodationWays = new Accommodation().CountAccommodationWaysMemo(floorCapacities, noOfPeople);
+            long accommodationWays = new Accommodation().CountAccommodationWaysTab(floorCapacities, noOfPeople);
             WriteLine(accommodationWays);
         }
     }
