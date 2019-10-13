@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using static System.Console;
 
 namespace Greedy
@@ -7,26 +8,33 @@ namespace Greedy
     {
         private long CountAccommodationWaysMemo(int[] floorCapacities, int noOfPeople)
         {
+            Dictionary<(int currentFloor, int noOfPeople), long> dp =
+                new Dictionary<(int currentFloor, int noOfPeople), long>();
+
             Array.Sort(floorCapacities);
 
-            return CountAccommodationWays(noOfPeople, 0);
+            return CountAccommodationWays(0, noOfPeople);
 
 
 
-            long CountAccommodationWays(int noOfPeopleLocal, int floor)
+            long CountAccommodationWays(int currentFloor, int noOfPeopleLocal)
             {
-                _count++;
                 // Solve small sub-problems
-                if (noOfPeopleLocal == 0) return 1;
-                if (noOfPeopleLocal < 0) return 0;
+                if (noOfPeopleLocal == 0) return dp[(currentFloor, noOfPeople: 0)] = 1;
+                if (noOfPeopleLocal < 0) return dp[(currentFloor, noOfPeople: noOfPeopleLocal)] = 0;
 
 
                 // Divide & Combine
                 long noOfWays = 0;
-                for (var level = floor; level < floorCapacities.Length; level++)
-                    noOfWays += CountAccommodationWays(noOfPeopleLocal - floorCapacities[level], level);
+                for (var level = currentFloor; level < floorCapacities.Length; level++)
+                {
+                    int remaining = noOfPeopleLocal - floorCapacities[level];
+                    if (!dp.ContainsKey((currentFloor: level, noOfPeople: remaining)))
+                        dp[(currentFloor: level, noOfPeople: remaining)] = CountAccommodationWays(level, remaining);
+                    noOfWays += dp[(currentFloor: level, noOfPeople: remaining)];
+                }
 
-                return noOfWays;
+                return dp[(currentFloor, noOfPeople: noOfPeopleLocal)] = noOfWays;
             }
         }
 
@@ -77,23 +85,22 @@ namespace Greedy
         }
 
 
-        private static int _count;
         internal static void Work()
         {
             //int noOfPeople = 4;
-            //int[] floorCapacities = { 1, 2 };   // Ans: 3   C: 11
+            //int[] floorCapacities = { 1, 2 };   // Ans: 3   C: 11  9
 
             //int noOfPeople = 5;
-            //int[] floorCapacities = { 1, 2, 3 };   // Ans: 5   C: 26
+            //int[] floorCapacities = { 1, 2, 3 };   // Ans: 5   C: 26  16
 
             //int noOfPeople = 6;
-            //int[] floorCapacities = { 1, 3, 5 };   // Ans: 4   C: 26
+            //int[] floorCapacities = { 1, 3, 5 };   // Ans: 4   C: 26  19
 
             int noOfPeople = 10;
-            int[] floorCapacities = { 2, 4, 5, 7, 8 };   // Ans: 5   C: 59
+            int[] floorCapacities = { 2, 4, 5, 7, 8 };   // Ans: 5   C: 59  35
 
             long accommodationWays = new Accommodation().CountAccommodationWaysMemo(floorCapacities, noOfPeople);
-            WriteLine(accommodationWays); WriteLine($"C: {_count}");
+            WriteLine(accommodationWays);
         }
     }
 }
